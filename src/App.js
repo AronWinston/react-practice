@@ -1,37 +1,45 @@
 import React, { Component } from 'react';
 import './App.css';
+import Radium, {StyleRoot} from 'radium';
 import Person from './Person/Person';
+
 
 class App extends Component {
  
   state = {
     persons: [
-      {name: 'Aron', age: 26},
-      {name: 'Mitch', age: 29},
-      {name: 'Eileen', age: 55}
+      {id: 'aw12', name: 'Aron', age: 26},
+      {id: 'aw123', name: 'Mitch', age: 29},
+      {id: 'aw124', name: 'Eileen', age: 55}
     ],
     otherState: 'some other state',
     showPersons: false
   }
 
-  changeNameHandler = (newName) => {
-    // console.log('was clicked');
-    // DONT DO LIKE THIS this.state.persons[0].name="Aron Winston"
-    this.setState({persons: [
-      {name: newName, age: 26},
-      {name: 'Mitchell Winston', age: 29},
-      {name: newName, age: 30}
-    ]
-   })
+  deletePersonHandler = (personIndex) =>{
+    // const persons = this.state.persons.slice();
+    const persons = [...this.state.persons];
+    persons.splice(personIndex, 1);
+    this.setState({persons : persons});
   }
 
-  nameChangedHandler = (event) => {
-   this.setState({persons: [
-      {name: event.target.value, age: 26},
-      {name: "Alex", age: 29},
-      {name: "John", age: 30}
-    ]
-   } )
+  nameChangedHandler = (event, id) => {
+   const personIndex = this.state.persons.findIndex(p =>{
+     return p.id === id;
+   })
+
+   const person = {
+     ...this.state.persons[personIndex]
+   };
+
+   person.name = event.target.value;
+
+   const persons = [...this.state.persons];
+   persons[personIndex] = person;
+  
+   
+   
+    this.setState({persons: persons} );
   }
 
 
@@ -45,11 +53,16 @@ class App extends Component {
   render() {
     
     const style = {
-      backGroundColor: 'yellow',
+      backgroundColor: 'green',
+      color: 'white',
       font: 'inherit',
       border: '1px solid blue',
       padding: '8px',
-      cursor: 'pointer'
+      cursor: 'pointer',
+      ':hover':{
+        backgroundColor: 'lightgreen',
+        color: 'black'
+      }
     };
 
     let persons=null;
@@ -57,27 +70,46 @@ class App extends Component {
     if (this.state.showPersons){
       persons=(
       <div>
-      <Person 
-      name= {this.state.persons[0].name} 
-      age={this.state.persons[0].age}
-      changed={this.nameChangedHandler}/>
-      <Person 
-      name={this.state.persons[1].name} 
-      age={this.state.persons[1].age} 
-      click={this.changeNameHandler.bind(this, 'Mandinko')}
-      changed={this.nameChangedHandler}>My Hobbies: Fishing</Person>
-      <Person 
-      name={this.state.persons[2].name} 
-      age={this.state.persons[2].age}
-      click={this.changeNameHandler.bind(this, 'Legend')}/>
+        {this.state.persons.map((person,index) => {
+          return <Person
+          click={()=>this.deletePersonHandler(index)} 
+          name={person.name}
+          age={person.age}
+          key={person.id}
+          changed={(event)=>this.nameChangedHandler(event, person.id)} />
+        })}
+
       </div>
       );
+
+      style.backgroundColor = 'red';
+      style[':hover'] = {
+          backgroundColor: 'salmon',
+          color: 'black'
+        
+      }
+
+    }
+
+    let classes = [];
+
+    if(this.state.persons.length <=2){
+      classes.push('red');
+    }
+
+    if(this.state.persons.length <=1){
+      classes.push('bold');
+    }
+
+    if(this.state.persons.length <=0){
+      classes.push('border');
     }
     
     return (
+      <StyleRoot>
       <div className="App">
         <h1>Hi, I am a React App</h1>
-        <p>This is really awesome</p>
+        <p className={classes.join(' ')}>This is really awesome</p>
         <button 
         style = {style}
         onClick={this.togglePersonsHandler}>Toggle Persons</button>
@@ -85,12 +117,11 @@ class App extends Component {
             <div>
               {persons}
             </div>
-
- 
-      </div>
+    </div>
+    </StyleRoot>
     );
     // return React.createElement('div',{className: 'App'}, React.createElement('h1', null, 'Does this work'))
   }
 }
 
-export default App;
+export default Radium(App);
