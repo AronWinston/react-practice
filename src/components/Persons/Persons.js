@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import Person from './Person/Person';
 
+//                    PureComponent work same as shouldcomponentupdate with all props checked
 class Persons extends Component{ 
   // static getDerivedStateFromProps(props, state){ 
   //   console.log('[Persons.js] getDerivedStateFromProps');
@@ -9,7 +10,16 @@ class Persons extends Component{
 
   shouldComponentUpdate(nextProps, nextState){
     console.log('[Persons.js] shouldComponentUpdate');
-    return true
+    if(
+      nextProps.persons !== this.props.person || 
+      nextProps.clicked !== this.props.clicked 
+      || nextProps.changed !== this.props.changed || 
+      nextProps.ageChanged !== this.props.ageChanged){
+      return true;
+    }else{
+      return false;
+    }
+    
   }
 
   getSnapshotBeforeUpdate(prevProps, prevState){
