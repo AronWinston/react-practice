@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import Person from './Person/Person';
 
+
 //                    PureComponent work same as shouldcomponentupdate with all props checked
 class Persons extends Component{ 
   // static getDerivedStateFromProps(props, state){ 
@@ -8,19 +9,19 @@ class Persons extends Component{
   //   return state;
   // }  
 
-  shouldComponentUpdate(nextProps, nextState){
-    console.log('[Persons.js] shouldComponentUpdate');
-    if(
-      nextProps.persons !== this.props.person || 
-      nextProps.clicked !== this.props.clicked 
-      || nextProps.changed !== this.props.changed || 
-      nextProps.ageChanged !== this.props.ageChanged){
-      return true;
-    }else{
-      return false;
-    }
+  // shouldComponentUpdate(nextProps, nextState){
+  //   console.log('[Persons.js] shouldComponentUpdate');
+  //   if(
+  //     nextProps.persons !== this.props.person || 
+  //     nextProps.clicked !== this.props.clicked 
+  //     || nextProps.changed !== this.props.changed || 
+  //     nextProps.ageChanged !== this.props.ageChanged){
+  //     return true;
+  //   }else{
+  //     return false;
+  //   }
     
-  }
+  // }
 
   getSnapshotBeforeUpdate(prevProps, prevState){
     console.log('[Persons.js] getSnaphotBeforeUpdate');
@@ -49,7 +50,8 @@ class Persons extends Component{
           age={person.age}
         
           changed={(event)=>this.props.changed(event, person.id)}
-          ageChanged = {(e)=>this.props.ageChanged(e, person.id)} />
+          ageChanged = {(e)=>this.props.ageChanged(e, person.id)}
+           />
         );
       });
     };

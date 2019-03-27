@@ -1,16 +1,22 @@
 
 //useEffect is second most important react hook
-import React, {useEffect} from 'react';
-import classes from './Cockpit.css'
+import React, {useEffect, useRef, useContext} from 'react';
+import classes from './Cockpit.css';
+import AuthContext from '../../context/auth-context';
 
 const cockpit = (props) =>{
+    const toggleButtonRef = useRef(null);
+    const authContext = useContext(AuthContext);
+
+    console.log(authContext.authenticated);
 
     useEffect(() => {
       console.log('[Cockpit.js] useEffect');
       //Http request...
-      setTimeout(() => {
-        alert('Saved data to cloud!')
-      }, 1000);
+      // setTimeout(() => {
+      //   alert('Saved data to cloud!')
+      // }, 1000);
+      toggleButtonRef.current.click();
       return ()=>{
         console.log('[Cockpit.js] cleanup work in useEffect');
       }
@@ -51,8 +57,21 @@ const cockpit = (props) =>{
             <h1>{props.title}</h1>
             <p className={assignedClasses.join(' ')}>This is really awesome</p>
             <button 
+                ref={toggleButtonRef}
                 className={buttonClass}
                 onClick={props.clicked}>Toggle Persons</button>
+           
+
+            {/* without useContext hook */}
+            {/* <AuthContext.Consumer>
+              {(context) =>  
+              <button
+              onClick={context.login}>
+              Log In
+            </button>}
+            </AuthContext.Consumer> */}
+            <button
+              onClick={authContext.login}>Log In</button>
         </div>
     );
 };
